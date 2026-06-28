@@ -19,7 +19,7 @@ Subcommands:
 
 Models (override via --model or manifest):
   image: gpt-image-2-text-to-image
-  video: bytedance/seedance-2-fast   (this is the KIE slug for "Seedance 2.0 mini")
+  video: bytedance/seedance-2-mini   (this is the KIE slug for "Seedance 2.0 mini"; -fast is a pricier variant)
 """
 import argparse, json, os, sys, time, urllib.request, urllib.error, urllib.parse, ssl
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -27,7 +27,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 API_BASE = "https://api.kie.ai/api/v1/jobs"
 IMAGE_MODEL = "gpt-image-2-text-to-image"
 IMAGE_EDIT_MODEL = "gpt-image-2-image-to-image"  # reference/ref-image consistency
-VIDEO_MODEL = "bytedance/seedance-2-fast"  # Seedance 2.0 mini on KIE
+VIDEO_MODEL = "bytedance/seedance-2-mini"  # Seedance 2.0 mini on KIE (cheaper than -fast)
 POLL_INTERVAL = 6        # seconds between polls
 POLL_TIMEOUT = 900       # max seconds to wait per task
 _SSL = ssl.create_default_context()

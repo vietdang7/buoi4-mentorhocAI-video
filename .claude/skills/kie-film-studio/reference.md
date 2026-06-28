@@ -51,7 +51,7 @@ Response: `{ "code": 200, "msg": "success", "data": { "taskId": "..." } }`
 ```
 Use `input_urls` to pass a character/product reference sheet (and/or prior frames) so identity, wardrobe, and product geometry carry across panels. The driver auto-selects this model whenever `input_urls` is non-empty. Still repeat the Style/Character Bible text for grade/light/world. Verified: a barista rendered from a turnaround sheet stayed on-model across a new shot.
 
-## Video model — `bytedance/seedance-2-fast` (Seedance 2.0 mini)
+## Video model — `bytedance/seedance-2-mini` (Seedance 2.0 mini; `bytedance/seedance-2-fast` is a pricier variant)
 ```json
 "input": {
   "prompt": "string, 3–20000 chars, required",

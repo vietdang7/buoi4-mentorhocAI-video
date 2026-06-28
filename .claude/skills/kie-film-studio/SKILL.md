@@ -87,7 +87,7 @@ Optional per-shot overrides: `aspect_ratio`, `image_resolution`, `video_resoluti
 | | Values |
 |---|---|
 | Image model | `gpt-image-2-text-to-image` (prompt) or `gpt-image-2-image-to-image` (prompt + `input_urls`, up to 16 refs) · resolution `1K`/`2K`/`4K` (1:1 can't be 4K; `auto` aspect → 1K only) · aspect `1:1,3:2,2:3,4:3,3:4,16:9,9:16,21:9,…` |
-| Video model | `bytedance/seedance-2-fast` (= Seedance 2.0 mini) · resolution `480p`/`720p` · duration `4–15s` · aspect `16:9,9:16,1:1,4:3,3:4,21:9,adaptive` · `generate_audio` default true |
+| Video model | `bytedance/seedance-2-mini` (= Seedance 2.0 mini; `bytedance/seedance-2-fast` is a pricier variant) · resolution `480p`/`720p` · duration `4–15s` · aspect `16:9,9:16,1:1,4:3,3:4,21:9,adaptive` · `generate_audio` default true |
 | API | create `POST /api/v1/jobs/createTask` → poll `GET /api/v1/jobs/recordInfo?taskId=` (`state`: waiting→generating→success/fail; `resultJson.resultUrls`) |
 
 ## Common Mistakes
