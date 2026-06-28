@@ -26,6 +26,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 API_BASE = "https://api.kie.ai/api/v1/jobs"
 IMAGE_MODEL = "gpt-image-2-text-to-image"
+IMAGE_EDIT_MODEL = "gpt-image-2-image-to-image"  # reference/ref-image consistency
 VIDEO_MODEL = "bytedance/seedance-2-fast"  # Seedance 2.0 mini on KIE
 POLL_INTERVAL = 6        # seconds between polls
 POLL_TIMEOUT = 900       # max seconds to wait per task
@@ -142,8 +143,12 @@ def download(url, out_path):
 
 # ---------- high-level ops ----------
 def gen_image(key, prompt, aspect_ratio="16:9", resolution="2K", model=IMAGE_MODEL,
-              out=None, label="image"):
+              input_urls=None, out=None, label="image"):
     inp = {"prompt": prompt, "aspect_ratio": aspect_ratio, "resolution": resolution}
+    if input_urls:
+        inp["input_urls"] = list(input_urls)[:16]  # max 16 reference images
+        if model == IMAGE_MODEL:                    # auto-switch to image-to-image
+            model = IMAGE_EDIT_MODEL
     tid = create_task(key, model, inp)
     eprint(f"  [{label}] taskId={tid}")
     urls, _ = poll_task(key, tid, label)
@@ -196,13 +201,34 @@ def run_manifest(key, path, do_storyboard, do_animate, do_assemble, concurrency,
 
     # Phase: storyboard (images) — parallel
     if do_storyboard:
+        # 0) Character sheet pre-pass (text-to-image) — its URL anchors every referencing shot.
+        char = m.get("character")
+        if char and char.get("image_prompt") and not char.get("image_url"):
+            eprint("\n=== CHARACTER SHEET ===")
+            r = gen_image(key, char["image_prompt"],
+                          char.get("aspect_ratio", d.get("aspect_ratio", "16:9")),
+                          char.get("image_resolution", d.get("image_resolution", "2K")),
+                          char.get("image_model", IMAGE_MODEL),
+                          out=os.path.join(img_dir, "character.png"), label="char")
+            char["image_url"], char["image_file"] = r["url"], r["file"]
+            _save_manifest(path, m)
+        char_url = (m.get("character") or {}).get("image_url")
+        extra_refs = m.get("character_refs") or d.get("character_refs") or []
+
         eprint(f"\n=== STORYBOARD PHASE ({sum(1 for s in shots if not s.get('image_url'))} frames to generate) ===")
         todo = [s for s in shots if not s.get("image_url") and s.get("image_prompt")]
         def _img(s):
+            # assemble reference images: character sheet (unless opted out) + global + per-shot
+            refs = []
+            if s.get("reference_character", True) and char_url:
+                refs.append(char_url)
+            refs.extend(extra_refs)
+            refs.extend(s.get("input_urls", []))
             r = gen_image(key, s["image_prompt"],
                           s.get("aspect_ratio", d.get("aspect_ratio", "16:9")),
                           s.get("image_resolution", d.get("image_resolution", "2K")),
                           s.get("image_model", d.get("image_model", IMAGE_MODEL)),
+                          input_urls=refs or None,
                           out=os.path.join(img_dir, f"{s['id']}.png"), label=f"img:{s['id']}")
             s["image_url"], s["image_file"] = r["url"], r["file"]
             return s["id"]
@@ -307,6 +333,8 @@ def main():
     pi.add_argument("--aspect-ratio", default="16:9")
     pi.add_argument("--resolution", default="2K")
     pi.add_argument("--model", default=IMAGE_MODEL)
+    pi.add_argument("--input-url", action="append", dest="input_urls",
+                    help="reference image URL (repeatable, max 16) -> uses image-to-image")
     pi.add_argument("--out")
 
     pv = sub.add_parser("video")
@@ -335,7 +363,8 @@ def main():
     key = load_api_key()
 
     if a.cmd == "image":
-        r = gen_image(key, a.prompt, a.aspect_ratio, a.resolution, a.model, a.out)
+        r = gen_image(key, a.prompt, a.aspect_ratio, a.resolution, a.model,
+                      input_urls=a.input_urls, out=a.out)
         print(json.dumps(r))
     elif a.cmd == "video":
         r = gen_video(key, a.prompt, a.first_frame_url, a.last_frame_url, a.duration,

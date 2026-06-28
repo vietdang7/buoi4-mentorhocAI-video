@@ -29,15 +29,27 @@ Response: `{ "code": 200, "msg": "success", "data": { "taskId": "..." } }`
 ### Status codes
 200 ok · 401 auth · 402 insufficient credits · 422 validation · 429 rate-limited · 501 generation failed · 505 feature disabled. The driver retries 429/5xx with exponential backoff.
 
-## Image model — `gpt-image-2-text-to-image`
+## Image models — text-to-image & image-to-image
+
+**`gpt-image-2-text-to-image`** (generate from prompt):
 ```json
 "input": {
   "prompt": "string, 1–20000 chars, required",
   "aspect_ratio": "auto|1:1|3:2|2:3|4:3|3:4|5:4|4:5|16:9|9:16|2:1|1:2|3:1|1:3|21:9|9:21",
-  "resolution": "1K|2K|4K"   // 1:1 cannot be 4K
+  "resolution": "1K|2K|4K"   // 1:1 cannot be 4K; auto -> 1K only
 }
 ```
-Text-to-image only — **no reference-image input** on this endpoint. Carry character/style consistency through repeated prompt text (the Style/Character Bible).
+
+**`gpt-image-2-image-to-image`** (generate with reference images — the consistency path):
+```json
+"input": {
+  "prompt": "string, ≤20000 chars, required",
+  "input_urls": ["array of image URLs, required, max 16"],
+  "aspect_ratio": "same enum as above (default auto)",
+  "resolution": "1K|2K|4K"
+}
+```
+Use `input_urls` to pass a character/product reference sheet (and/or prior frames) so identity, wardrobe, and product geometry carry across panels. The driver auto-selects this model whenever `input_urls` is non-empty. Still repeat the Style/Character Bible text for grade/light/world. Verified: a barista rendered from a turnaround sheet stayed on-model across a new shot.
 
 ## Video model — `bytedance/seedance-2-fast` (Seedance 2.0 mini)
 ```json

@@ -7,23 +7,30 @@
     "duration": 5,
     "generate_audio": true
   },
-  "_bible": "STYLE & CHARACTER BIBLE (paste into every image_prompt): hero = a glossy crimson 1990s GT race car, matte carbon accents; world = fog-wrapped alpine pass at dawn; look = anamorphic 35mm, teal-and-amber grade, Kodak Portra warmth, realistic analog film grain, 16:9. Repeat verbatim for cross-frame consistency (the image endpoint has no reference input).",
+  "_bible": "STYLE BIBLE (paste into every image_prompt): world = fog-wrapped alpine pass at dawn; look = anamorphic 35mm, teal-and-amber grade, Kodak Portra warmth, realistic analog film grain, 16:9. The recurring 'character' here is the hero car — referenced via image-to-image so its design stays identical across shots.",
+  "character": {
+    "image_prompt": "Product/vehicle reference sheet on a clean off-white background: a glossy crimson 1990s GT race car with matte carbon accents, gold-painted brake calipers, white racing number '7' roundel on the doors. Show front 3/4, side profile, and rear 3/4 views plus a front-on view. Even studio lighting, sharp focus, no text.",
+    "image_resolution": "1K"
+  },
   "shots": [
     {
       "id": "s01",
-      "image_prompt": "Cinematic 16:9 storyboard frame. Extreme wide establishing shot of a glossy crimson 1990s GT race car, matte carbon accents, small in frame on a fog-wrapped alpine pass at dawn. Low-angle from the wet asphalt, 24mm wide lens, deep depth of field, leading lines of the guardrail curving to a vanishing point. Golden-hour backlight through drifting mist, long shadows. Anamorphic 35mm look, teal-and-amber grade, Kodak Portra warmth, realistic analog film grain, no text.",
+      "reference_character": true,
+      "image_prompt": "Use the reference image as the exact design of the car. Cinematic 16:9 storyboard frame: extreme wide establishing shot of the crimson GT race car, small in frame on a fog-wrapped alpine pass at dawn. Low-angle from the wet asphalt, 24mm wide lens, deep depth of field, guardrail leading lines to a vanishing point. Golden-hour backlight through drifting mist, long shadows. Anamorphic 35mm, teal-and-amber grade, Kodak Portra warmth, realistic film grain. Keep the car's shape, crimson paint, carbon accents and number 7 identical to the reference. No text.",
       "motion_prompt": "The race car accelerates away down the curving road, kicking up a faint mist trail. Slow cinematic dolly-in following behind. Golden dawn light flares softly through the fog. [AUDIO: 0s] distant engine roar building, wind, loose gravel. Maintain car shape and color, no edge melting, no morphing, sharp crisp frames.",
       "duration": 5
     },
     {
       "id": "s02",
-      "image_prompt": "Cinematic 16:9 storyboard frame. Medium shot of the same glossy crimson 1990s GT race car (matte carbon accents) hugging a hairpin bend, fog-wrapped alpine pass at dawn. Three-quarter front view, 50mm lens, shallow depth of field, the car on the right third. Hard golden rim light catches the wet bodywork; cool blue shadow in the mist. Anamorphic 35mm look, teal-and-amber grade, Kodak Portra warmth, realistic analog film grain, no text.",
+      "reference_character": true,
+      "image_prompt": "Use the reference image as the exact design of the car. Cinematic 16:9 storyboard frame: medium shot of the same crimson GT race car hugging a hairpin bend, fog-wrapped alpine pass at dawn. Three-quarter front view, 50mm lens, shallow depth of field, car on the right third. Hard golden rim light on the wet bodywork; cool blue shadow in the mist. Anamorphic 35mm, teal-and-amber grade, Kodak Portra warmth, realistic film grain. Keep the car identical to the reference. No text.",
       "motion_prompt": "The car powers through the hairpin, body leaning into the turn, spray flicking off the tires. Smooth gimbal tracking shot arcing with the car. [AUDIO: 0s] engine downshift and roar, tires gripping wet asphalt. Maintain car shape and color, gimbal stabilized, no morphing, sharp frames.",
       "duration": 5
     },
     {
       "id": "s03",
-      "image_prompt": "Cinematic 16:9 storyboard frame. Extreme close-up of the crimson race car's front wheel and splitter throwing a fine sheet of mist, wet alpine asphalt below at dawn. Macro 85mm f/1.8, very shallow depth of field, droplets catching golden light. Anamorphic 35mm look, teal-and-amber grade, realistic analog film grain, no text.",
+      "reference_character": true,
+      "image_prompt": "Use the reference image for the car's exact paint and finish. Cinematic 16:9 storyboard frame: extreme close-up of the crimson car's front wheel and gold brake caliper throwing a fine sheet of mist, wet alpine asphalt below at dawn. Macro 85mm f/1.8, very shallow depth of field, droplets catching golden light. Anamorphic 35mm, teal-and-amber grade, realistic film grain. No text.",
       "motion_prompt": "The wheel spins fast, a fan of fine water droplets sprays outward and catches the dawn light in slow motion. Tiny slow push-in, macro. [AUDIO: 0s] high tire whine, water spray hiss. Slow-motion 2x, maintain crisp droplet detail, no edge melting, sharp frames.",
       "duration": 4
     }
