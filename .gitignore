@@ -8,3 +8,12 @@
 
 # Personal working media (not part of the shared skills)
 Racing.storyline/
+
+# KIE Film Studio generated output (frames, clips, final films)
+output/
+**/output/
+*.mp4
+frames/
+clips/
+film.json
+!.claude/skills/kie-film-studio/templates/film.example.json
